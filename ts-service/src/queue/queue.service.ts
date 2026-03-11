@@ -1,6 +1,6 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from "crypto";
 
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
 export interface EnqueuedJob<TPayload = unknown> {
   id: string;
@@ -22,10 +22,26 @@ export class QueueService {
     };
 
     this.jobs.push(job);
+
+    console.log(`Enqueued job: ${job.name} (${job.id})`);
     return job;
   }
 
   getQueuedJobs(): readonly EnqueuedJob[] {
     return this.jobs;
+  }
+
+  removeJob(jobId: string): boolean {
+    const index = this.jobs.findIndex(job => job.id === jobId);
+    if (index !== -1) {
+      const removedJob = this.jobs.splice(index, 1)[0];
+      console.log(`Removed job: ${removedJob.name} (${removedJob.id})`);
+      return true;
+    }
+    return false;
+  }
+
+  getQueueSize(): number {
+    return this.jobs.length;
   }
 }

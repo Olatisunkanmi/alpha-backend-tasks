@@ -2,7 +2,7 @@ import argparse
 import os
 from pathlib import Path
 
-import psycopg
+import psycopg2 as psycopg
 from sqlalchemy.engine import make_url
 
 from app.config import get_settings
@@ -26,7 +26,7 @@ def _to_psycopg_conninfo(database_url: str) -> str:
     return database_url
 
 
-def _ensure_schema_migrations(conn: psycopg.Connection) -> None:
+def _ensure_schema_migrations(conn) -> None:
     with conn.cursor() as cur:
         cur.execute(
             '''
@@ -39,14 +39,14 @@ def _ensure_schema_migrations(conn: psycopg.Connection) -> None:
     conn.commit()
 
 
-def _applied_migrations(conn: psycopg.Connection) -> set[str]:
+def _applied_migrations(conn) -> set[str]:
     with conn.cursor() as cur:
         cur.execute('SELECT filename FROM schema_migrations;')
         rows = cur.fetchall()
     return {row[0] for row in rows}
 
 
-def _apply_migration(conn: psycopg.Connection, filename: str, sql: str) -> None:
+def _apply_migration(conn, filename: str, sql: str) -> None:
     with conn.cursor() as cur:
         cur.execute(sql)
         cur.execute(
@@ -56,7 +56,7 @@ def _apply_migration(conn: psycopg.Connection, filename: str, sql: str) -> None:
     conn.commit()
 
 
-def _revert_migration(conn: psycopg.Connection, filename: str, sql: str) -> None:
+def _revert_migration(conn, filename: str, sql: str) -> None:
     with conn.cursor() as cur:
         cur.execute(sql)
         cur.execute(
@@ -87,7 +87,7 @@ def _read_migration_sql(path: Path, filename: str) -> str:
     return sql
 
 
-def _apply_pending_migrations(conn: psycopg.Connection) -> int:
+def _apply_pending_migrations(conn) -> int:
     applied = _applied_migrations(conn)
     migration_files = sorted(
         path.name for path in MIGRATIONS_DIR.glob('*.sql') if _is_up_migration_filename(path.name)
@@ -107,7 +107,7 @@ def _apply_pending_migrations(conn: psycopg.Connection) -> int:
     return applied_count
 
 
-def _latest_applied_migrations(conn: psycopg.Connection, steps: int) -> list[str]:
+def _latest_applied_migrations(conn, steps: int) -> list[str]:
     with conn.cursor() as cur:
         cur.execute(
             '''
@@ -122,7 +122,7 @@ def _latest_applied_migrations(conn: psycopg.Connection, steps: int) -> list[str
     return [row[0] for row in rows]
 
 
-def _rollback_migrations(conn: psycopg.Connection, steps: int) -> int:
+def _rollback_migrations(conn, steps: int) -> int:
     filenames = _latest_applied_migrations(conn, steps)
     if not filenames:
         print('No applied migrations to roll back.')

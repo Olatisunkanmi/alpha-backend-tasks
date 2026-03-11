@@ -29,6 +29,20 @@ This starts PostgreSQL on `localhost:5432` with:
 - user: `assessment_user`
 - password: `assessment_pass`
 
+## Run All Services with Docker
+
+From the repository root:
+
+```bash
+docker compose up --build
+```
+
+This starts:
+
+- Postgres on `localhost:5432`
+- Python service on `localhost:8000`
+- TypeScript service on `localhost:3000`
+
 ## Service Guides
 
 - Python service setup and commands: [python-service/README.md](python-service/README.md)

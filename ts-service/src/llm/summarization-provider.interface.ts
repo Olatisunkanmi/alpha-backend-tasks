@@ -1,4 +1,4 @@
-export type RecommendedDecision = 'advance' | 'hold' | 'reject';
+export type RecommendedDecision = "advance" | "hold" | "reject";
 
 export interface CandidateSummaryResult {
   score: number;
@@ -19,4 +19,4 @@ export interface SummarizationProvider {
   ): Promise<CandidateSummaryResult>;
 }
 
-export const SUMMARIZATION_PROVIDER = Symbol('SUMMARIZATION_PROVIDER');
+export const SUMMARIZATION_PROVIDER = Symbol("SUMMARIZATION_PROVIDER");

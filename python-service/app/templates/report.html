@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+        }
+        .report-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        header {
+            border-bottom: 2px solid #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 24px;
+        }
+        .meta-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+            background-color: #f0f4f8;
+            padding: 20px;
+            border-radius: 4px;
+        }
+        .meta-item {
+            font-size: 0.9em;
+        }
+        .meta-label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+        section {
+            margin-bottom: 30px;
+        }
+        h2 {
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .content-box {
+            padding: 0 10px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .metric-card {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .metric-name {
+            font-size: 0.8em;
+            color: #777;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .metric-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.8em;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <header>
+            <h1>{{ title }}</h1>
+        </header>
+
+        <div class="meta-info">
+            <div class="meta-item">
+                <span class="meta-label">Company</span>
+                {{ companyName }} ({{ ticker }})
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Sector</span>
+                {{ sector }}
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Analyst</span>
+                {{ analystName }}
+            </div>
+        </div>
+
+        <section>
+            <h2>Executive Summary</h2>
+            <div class="content-box">
+                {{ summary }}
+            </div>
+        </section>
+
+        <section>
+            <h2>Recommendation</h2>
+            <div class="content-box">
+                <p><strong>{{ recommendation }}</strong></p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Key Points</h2>
+            <div class="content-box">
+                <ul>
+                    {% for point in keyPoints %}
+                    <li>{{ point }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Risks</h2>
+            <div class="content-box">
+                <ul>
+                    {% for risk in risks %}
+                    <li>{{ risk }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+
+        {% if metrics %}
+        <section>
+            <h2>Financial Metrics</h2>
+            <div class="metrics-grid">
+                {% for metric in metrics %}
+                <div class="metric-card">
+                    <span class="metric-name">{{ metric.name }}</span>
+                    <span class="metric-value">{{ metric.value }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <footer>
+            Report generated on {{ generatedAt }}
+        </footer>
+    </div>
+</body>
+</html>
