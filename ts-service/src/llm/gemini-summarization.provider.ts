@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import {
@@ -7,7 +8,6 @@ import {
   RecommendedDecision,
 } from "./summarization-provider.interface";
 import { promptBuild } from "./prompt-guide";
-import { stringify } from "querystring";
 
 @Injectable()
 export class GeminiSummarizationProvider implements SummarizationProvider {
@@ -18,7 +18,7 @@ export class GeminiSummarizationProvider implements SummarizationProvider {
 
   constructor(private readonly configService: ConfigService) {
     this.apiKey = this.configService.get<string>("GEMINI_API_KEY") ?? "";
-    this.model = "gemini-1.5-flash";
+    this.model = "gemini-3-flash-preview";
 
     this.logger.log(
       `Initializing Gemini Provider. API Key present: ${!!this.apiKey}`,
